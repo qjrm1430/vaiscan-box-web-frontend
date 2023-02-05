@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="352.103" height="98.093" viewBox="0 0 352.103 98.093">
+  <g id="그룹_64" data-name="그룹 64" transform="translate(-870.595 -24.211)">
+    <g id="그룹_10" data-name="그룹 10" transform="translate(872.096 24.711)">
+      <g id="Icon_feather-box" data-name="Icon feather-box" transform="translate(0 21.925)">
+        <path id="패스_8" data-name="패스 8" d="M70.979,54.858V25.222a7.413,7.413,0,0,0-3.693-6.409L41.433,4a7.367,7.367,0,0,0-7.387,0L8.193,18.814A7.413,7.413,0,0,0,4.5,25.222V54.858a7.413,7.413,0,0,0,3.693,6.409L34.046,76.085a7.367,7.367,0,0,0,7.387,0L67.286,61.267A7.413,7.413,0,0,0,70.979,54.858Z" transform="translate(-4.5 -3.003)" fill="none" stroke="#f9f9fd" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        <path id="패스_9" data-name="패스 9" d="M4.9,10.44,37.158,28.9,69.41,10.44" transform="translate(-3.918 8.008)" fill="none" stroke="#f9f9fd" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+        <path id="패스_10" data-name="패스 10" d="M18,54.552V18" transform="translate(15.24 19.523)" fill="none" stroke="#f9f9fd" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+      </g>
+      <path id="Icon_awesome-check" data-name="Icon awesome-check" d="M6.466,13.918.279,7.731a.952.952,0,0,1,0-1.346L1.625,5.038a.952.952,0,0,1,1.346,0L7.139,9.206,16.067.279a.952.952,0,0,1,1.346,0l1.346,1.346a.952.952,0,0,1,0,1.346L7.812,13.918A.952.952,0,0,1,6.466,13.918Z" transform="matrix(0.985, 0.174, -0.174, 0.985, 7.254, 61.106)" fill="#f9f9fd" stroke="#f9f9fd" stroke-width="1"/>
+      <path id="Icon_material-settings-input-antenna" data-name="Icon material-settings-input-antenna" d="M23.308,26.647a6.47,6.47,0,1,0-5.176,0v8.541h5.176Z" transform="translate(12.52 -14.25)" fill="#f9f9fd" stroke="#f9f9fd" stroke-linecap="round" stroke-width="1"/>
+    </g>
+    <text id="vAIscan_Box" data-name="vAIscan Box" transform="translate(956.698 99.107)" fill="#f9f9fd" font-size="49" font-family="AppleSDGothicNeoEB00"><tspan x="0" y="0">vAIscan Box</tspan></text>
+  </g>
+</svg>

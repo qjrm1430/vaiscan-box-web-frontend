@@ -1,42 +1,19 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    <example-component
-      title="Example component"
-      active
-      :todos="todos"
-      :meta="meta"
-    ></example-component>
+  <q-page class="justify-evenly">
+    <Main />
+    <span class="CopyRight" style="bottom: 0">
+      CopyRight ⓒ 2023 Black Whopper Team. All Rights Reserved
+    </span>
   </q-page>
 </template>
-
 <script setup lang="ts">
-import { Todo, Meta } from 'components/models';
-import ExampleComponent from 'components/ExampleComponent.vue';
-import { ref } from 'vue';
-
-const todos = ref<Todo[]>([
-  {
-    id: 1,
-    content: 'ct1'
-  },
-  {
-    id: 2,
-    content: 'ct2'
-  },
-  {
-    id: 3,
-    content: 'ct3'
-  },
-  {
-    id: 4,
-    content: 'ct4'
-  },
-  {
-    id: 5,
-    content: 'ct5'
-  }
-]);
-const meta = ref<Meta>({
-  totalCount: 1200
-});
+import Main from 'src/components/MainIndex.vue';
 </script>
+
+<style lang="scss" scoped>
+.CopyRight {
+  font-family: AppleSDGothicNeoM00;
+  font-size: 15px;
+  color: #585d6e;
+}
+</style>

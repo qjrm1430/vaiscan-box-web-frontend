@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="77.952" height="26" viewBox="0 0 77.952 26">
+  <g id="그룹_18" data-name="그룹 18" transform="translate(-39.048 -148)">
+    <text id="Scan" transform="translate(75 168)" fill="#f9f9fd" font-size="20" font-family="AppleSDGothicNeoEB00"><tspan x="0" y="0">Scan</tspan></text>
+    <g id="Icon_ionic-md-qr-scanner" data-name="Icon ionic-md-qr-scanner" transform="translate(36.048 144)">
+      <path id="패스_15" data-name="패스 15" d="M6,7.762A.746.746,0,0,1,6.762,7H11V4H6.825A3.8,3.8,0,0,0,3,7.762V12H6Z" fill="#f9f9fd"/>
+      <path id="패스_16" data-name="패스 16" d="M25.225,4H21V7h4.2a.778.778,0,0,1,.8.762V12h3V7.762A3.757,3.757,0,0,0,25.225,4Z" fill="#f9f9fd"/>
+      <path id="패스_17" data-name="패스 17" d="M26,24.175a.746.746,0,0,1-.763.763H21V28h4.237A3.8,3.8,0,0,0,29,24.175V20H26Z" fill="#f9f9fd"/>
+      <path id="패스_18" data-name="패스 18" d="M6.762,24.938A.746.746,0,0,1,6,24.175V20H3v4.175A3.849,3.849,0,0,0,6.825,28H11V24.938Z" fill="#f9f9fd"/>
+    </g>
+  </g>
+</svg>

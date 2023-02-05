@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="96" height="28" viewBox="0 0 96 28">
+  <g id="그룹_26" data-name="그룹 26" transform="translate(-116 -146)">
+    <path id="Icon_open-account-login" data-name="Icon open-account-login" d="M12,0V4H28V24H12v4H32V0Zm4,8v4H0v4H16v4l8-6Z" transform="translate(116 146)" fill="#f9f9fd"/>
+    <g id="그룹_25" data-name="그룹 25" transform="translate(46)">
+      <text id="Log_in" data-name="Log in" transform="translate(112 166)" fill="#f9f9fd" font-size="20" font-family="AppleSDGothicNeoEB00"><tspan x="0" y="0">Log in</tspan></text>
+    </g>
+  </g>
+</svg>

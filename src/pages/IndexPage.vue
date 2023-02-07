@@ -1,5 +1,5 @@
 <template>
-  <q-page class="justify-evenly">
+  <q-page padding>
     <Main />
     <span class="CopyRight" style="bottom: 0">
       CopyRight ⓒ 2023 Black Whopper Team. All Rights Reserved

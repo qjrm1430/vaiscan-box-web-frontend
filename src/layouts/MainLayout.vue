@@ -3,44 +3,38 @@
     <q-drawer
       show-if-above
       v-model="leftDrawerOpen"
+      :width="260"
       side="left"
-      behavior="desktop"
+      class="my-custom-alignment column"
       style="background-color: #202027"
-      justify-center
+      flex
+      flex-center
     >
       <!-- drawer content -->
-      <q-item>
-        <q-img
-          src="src/assets/Logo.svg"
-          class="q-my-md q-mx-lg"
-          style="max-width: 80%"
-        />
-      </q-item>
+      <q-img
+        src="src/assets/Logo.svg"
+        class="q-my-md self-center"
+        style="max-width: 60%"
+      />
+
+      <q-separator dark />
+      <q-img
+        src="src/assets/Login.svg"
+        class="q-my-md self-center"
+        style="max-width: 30%"
+      />
 
       <q-separator dark />
 
-      <q-item>
-        <q-img
-          src="src/assets/Login.svg"
-          class="q-my-md"
-          style="max-width: 35%; margin-left: 82px"
-        />
-      </q-item>
-
-      <q-separator dark />
-
-      <q-item class="q-ma-md">
-        <q-img
-          src="src/assets/Box.svg"
-          class="q-ml-md"
-          style="width: 78px; height: 32px"
-        />
+      <div class="row q-pa-md self-center">
+        <q-img src="src/assets/Box.svg" style="width: 64px; height: 26px" />
         <q-separator dark vertical class="q-mx-lg" />
         <q-img
           src="src/assets/CheckScan.svg"
-          style="width: 78px; height: 26px; margin-top: 5px"
+          style="width: 64px; height: 22px; margin-top: 4px"
         />
-      </q-item>
+      </div>
+
       <q-separator dark />
     </q-drawer>
 
@@ -66,3 +60,10 @@ export default {
   }
 };
 </script>
+<style lang="scss" scoped>
+.my-custom-alignment {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>

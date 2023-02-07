@@ -36,7 +36,7 @@ export default {
           Welcome!
           <router-link to="/signup" class="user">Sign up</router-link>
         </div>
-        <q-item>
+        <div>
           <q-form @submit="onSubmit">
             <q-input
               dark
@@ -60,14 +60,21 @@ export default {
                 />
               </template>
             </q-input>
-            <q-btn label="Continue" type="submit" class="submit" />
+            <q-btn no-caps label="Continue" type="submit" class="submit" />
           </q-form>
-        </q-item>
+        </div>
         <q-separator dark class="q-ma-md" />
-        <q-item>
-          <q-btn label="Sign in with Kakao" type="submit" class="kakao" />
-        </q-item>
-        <q-img src="src/assets/HamBottom.svg" class="bottom" />
+        <div>
+          <q-btn
+            no-caps
+            label="Sign in with Kakao"
+            type="submit"
+            class="kakao"
+          />
+        </div>
+        <div>
+          <q-img src="src/assets/HamBottom.svg" class="bottom" />
+        </div>
       </q-card-section>
     </q-card>
   </div>

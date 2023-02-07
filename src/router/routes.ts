@@ -7,6 +7,32 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/IndexPage.vue') }]
   },
   {
+    path: '/auth',
+    component: () => import('layouts/LoginLayout.vue'),
+    children: [
+      {
+        path: 'signup',
+        component: () => import('layouts/LoginLayout.vue'),
+        children: [
+          { path: '', component: () => import('pages/SignUpPage.vue') }
+        ]
+      },
+      {
+        path: 'signin',
+        children: [
+          {
+            path: 'username',
+            component: () => import('pages/SignInIDPage.vue')
+          },
+          {
+            path: 'password',
+            component: () => import('pages/SignInPasswordPage.vue')
+          }
+        ]
+      }
+    ]
+  },
+  {
     path: '/signup',
     component: () => import('layouts/LoginLayout.vue'),
     children: [{ path: '', component: () => import('pages/SignUpPage.vue') }]
@@ -17,13 +43,18 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: 'username',
-        component: () => import('src/pages/SignInIDPage.vue')
+        component: () => import('pages/SignInIDPage.vue')
       },
       {
         path: 'password',
         component: () => import('pages/SignInPasswordPage.vue')
       }
     ]
+  },
+  {
+    path: '/storage',
+    component: () => import('layouts/StorageLayout.vue'),
+    children: [{ path: '', component: () => import('pages/StoragePage.vue') }]
   },
 
   // Always leave this as last one,

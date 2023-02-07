@@ -21,7 +21,7 @@ import {} from 'vue';
       />
     </div>
     <div class="q-ma-md">
-      <q-btn icon="search" label="Choose file to scan" class="button" />
+      <q-btn no-caps icon="search" label="Choose file to scan" class="button" />
     </div>
     <div style="max-width: 710px" class="q-my-xl">
       <span class="main">

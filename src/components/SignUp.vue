@@ -96,7 +96,7 @@ export default {
               />
             </template>
           </q-input>
-          <q-btn label="Create Account" type="submit" class="submit" />
+          <q-btn no-caps label="Create Account" type="submit" class="submit" />
         </q-form>
         <q-img src="src/assets/HamBottom.svg" class="bottom" />
       </q-card-section>

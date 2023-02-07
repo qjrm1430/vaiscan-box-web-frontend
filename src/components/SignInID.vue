@@ -5,7 +5,7 @@ import { ref } from 'vue';
 export default {
   data() {
     return {
-      id: 'string'
+      id: ''
     };
   },
   setup() {
@@ -32,24 +32,35 @@ export default {
           Don't have an account?
           <router-link to="/signup" class="link">Sign up</router-link>
         </div>
-        <q-form @submit="onSubmit">
-          <q-input
-            dark
-            ref="inputRef"
-            filled
-            v-model="id"
-            label="ID"
-            lazy-rules
-            :rules="[(val) => !!val || 'Field is required']"
-            style="margin-bottom: 8px"
+        <div>
+          <q-form @submit="onSubmit">
+            <q-input
+              dark
+              ref="inputRef"
+              filled
+              v-model="id"
+              label="ID"
+              lazy-rules
+              :rules="[(val) => !!val || 'Field is required']"
+              style="margin-bottom: 8px"
+            />
+            <q-btn no-caps label="Continue" type="submit" class="submit" />
+          </q-form>
+        </div>
+
+        <q-separator dark class="q-ma-md" />
+
+        <div>
+          <q-btn
+            no-caps
+            label="Sign in with Kakao"
+            type="submit"
+            class="kakao"
           />
-          <q-btn label="Continue" type="submit" class="submit" />
-        </q-form>
-
-        <q-separator dark />
-
-        <q-btn label="Sign in with Kakao" type="submit" class="kakao" />
-        <q-img src="src/assets/HamBottom.svg" class="bottom" />
+        </div>
+        <div>
+          <q-img src="src/assets/HamBottom.svg" class="bottom" />
+        </div>
       </q-card-section>
     </q-card>
   </div>
@@ -76,6 +87,13 @@ export default {
   width: 360px;
   font-family: AppleSDGothicNeoB00;
   background-color: #e27f46;
+  font-size: 18px;
+  color: #f7fdff;
+}
+.kakao {
+  width: 360px;
+  font-family: AppleSDGothicNeoB00;
+  background-color: #ead02c;
   font-size: 18px;
   color: #f7fdff;
 }

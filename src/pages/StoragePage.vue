@@ -19,7 +19,7 @@ export default {
   },
   setup() {
     return {
-      visible: 100
+      visible: 80
     };
   }
 };

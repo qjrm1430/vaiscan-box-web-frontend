@@ -1,28 +1,30 @@
 <script>
 import { ref } from 'vue';
-import { useQuasar } from 'quasar';
-
+import { api } from 'src/boot/axios';
 export default {
   setup() {
-    const $q = useQuasar();
     const inputRef = ref();
     const id = ref();
+    const name = ref();
     const password = ref();
     const rpassword = ref();
-
     return {
       id,
+      name,
       password,
       rpassword,
       isPwd: ref(true),
       isrPwd: ref(true),
       inputRef,
+
       onSubmit() {
-        $q.notify({
-          color: 'green-4',
-          textColor: 'white',
-          icon: 'cloud_done',
-          message: 'Submitted'
+        const data = {
+          alias: name.value,
+          username: id.value,
+          password: password.value
+        };
+        api.post('/auth/signup', data).then(() => {
+          self.$router.push({ path: '/signin/username' });
         });
       },
       reset() {
@@ -43,6 +45,16 @@ export default {
           <router-link to="/login" class="link">Login</router-link>
         </div>
         <q-form @submit="onSubmit">
+          <q-input
+            dark
+            ref="inputRef"
+            filled
+            v-model="name"
+            label="Name"
+            lazy-rules
+            :rules="[(val) => !!val || 'Field is required']"
+            style="margin-bottom: 8px"
+          />
           <q-input
             dark
             ref="inputRef"
@@ -80,7 +92,7 @@ export default {
             v-model="rpassword"
             filled
             label="Repeat Password"
-            :type="isrPwd ? 'rpassword' : 'text'"
+            :type="isrPwd ? 'password' : 'text'"
             lazy-rules
             :rules="[
               (val) => !!val || 'Field is required',

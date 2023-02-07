@@ -1,6 +1,7 @@
 <script>
 import { ref } from 'vue';
 import { api } from 'src/boot/axios';
+import { useRouter } from 'vue-router';
 export default {
   setup() {
     const inputRef = ref();
@@ -8,6 +9,7 @@ export default {
     const name = ref();
     const password = ref();
     const rpassword = ref();
+    const router = useRouter();
     return {
       id,
       name,
@@ -24,7 +26,7 @@ export default {
           password: password.value
         };
         api.post('/auth/signup', data).then(() => {
-          self.$router.push({ path: '/signin/username' });
+          router.push({ path: '/signin/username' });
         });
       },
       reset() {

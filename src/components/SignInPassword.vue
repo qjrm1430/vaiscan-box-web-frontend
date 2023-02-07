@@ -1,23 +1,24 @@
 <script lang="ts">
 import { ref } from 'vue';
-import { useQuasar } from 'quasar';
+import { api } from 'src/boot/axios';
+import { useRouter } from 'vue-router';
 
 export default {
   setup() {
-    const $q = useQuasar();
     const inputRef = ref();
     const password = ref();
+    const router = useRouter();
 
     return {
       password,
       isPwd: ref(true),
       inputRef,
       onSubmit() {
-        $q.notify({
-          color: 'green-4',
-          textColor: 'white',
-          icon: 'cloud_done',
-          message: 'Submitted'
+        const data = {
+          password: password.value
+        };
+        api.post('/auth/signin', data).then(() => {
+          router.push({ path: '/storage' });
         });
       },
       reset() {

@@ -1,20 +1,23 @@
 <script lang="ts">
 import { ref } from 'vue';
-// import axios from 'axios';
+import { api } from 'src/boot/axios';
+import { useRouter } from 'vue-router';
 
 export default {
-  data() {
-    return {
-      id: ''
-    };
-  },
   setup() {
     const inputRef = ref();
-
+    const id = ref();
+    const router = useRouter();
     return {
+      id,
       inputRef,
       onSubmit() {
-        //
+        const data = {
+          username: id.value
+        };
+        api.post('/auth/signin', data).then(() => {
+          router.push({ path: '/signin/password' });
+        });
       },
       reset() {
         inputRef.value.resetValidation();

@@ -3,11 +3,11 @@ import { ref, computed, nextTick } from 'vue';
 import { api } from 'src/boot/axios';
 
 const columns = [
-  // {
-  //   name: 'Type',
-  //   label: 'Type',
-  //   field: 'type'
-  // },
+  {
+    name: 'Type',
+    label: 'Type',
+    field: 'file_type'
+  },
   {
     name: 'Title',
     required: true,
@@ -17,11 +17,11 @@ const columns = [
     sortable: true
   },
   {
-    name: 'Date Modified',
+    name: 'Date Uploaded',
     required: true,
     align: 'right',
-    label: 'Date Modified',
-    field: 'date_modified',
+    label: 'Date Uploaded',
+    field: 'upload_time',
     sortable: true
   },
   {
@@ -34,79 +34,23 @@ const columns = [
   {
     name: 'Security',
     label: 'Security',
-    field: 'security',
+    field: 'status',
     align: 'right',
     sortable: true
   }
 ];
-
-const seed = [
-  {
-    title: 'Frozen Yogurt',
-    date_modified: 159,
-    size: 6.0,
-    security: 'Checking'
-  },
-  {
-    title: 'Ice cream sandwich',
-    date_modified: 237,
-    size: 9.0,
-    security: 'Checked'
-  },
-  {
-    title: 'Eclair',
-    date_modified: 262,
-    size: 16.0,
-    security: 'Checking'
-  },
-  {
-    title: 'Cupcake',
-    date_modified: 305,
-    size: 3.7,
-    security: 'No Check'
-  },
-  {
-    title: 'Gingerbread',
-    date_modified: 356,
-    size: 16.0,
-    security: 'Checked'
-  },
-  {
-    title: 'Jelly bean',
-    date_modified: 375,
-    size: 0.0,
-    security: 'Checking'
-  },
-  {
-    title: 'Lollipop',
-    date_modified: 392,
-    size: 0.2,
-    security: 'Checked'
-  },
-  {
-    title: 'Honeycomb',
-    date_modified: 408,
-    size: 3.2,
-    security: 'No Check'
-  },
-  {
-    title: 'Donut',
-    date_modified: 452,
-    size: 25.0,
-    security: 'Checking'
-  },
-  {
-    title: 'KitKat',
-    date_modified: 518,
-    size: 26.0,
-    security: 'Checked'
-  }
-];
+// {
+//     title: 'Frozen Yogurt',
+//     date_modified: 159,
+//     size: 6.0,
+//     security: 'Checking'
+// }
+var seed = ref(this.seed);
 
 // we generate lots of rows here
 let allRows = [];
 for (let i = 0; i < 1000; i++) {
-  allRows = allRows.concat(seed.slice(0).map((r) => ({ ...r })));
+  allRows = allRows.concat(seed.value.slice(0).map((r) => ({ ...r })));
 }
 allRows.forEach((row, index) => {
   row.index = index;
@@ -114,10 +58,12 @@ allRows.forEach((row, index) => {
 
 const pageSize = 50;
 const lastPage = Math.ceil(allRows.length / pageSize);
+
 export default {
   data() {
     return {
-      node: 'My Box/My Directory'
+      link: '',
+      seed: []
     };
   },
   setup() {
@@ -129,7 +75,9 @@ export default {
       allRows.slice(0, pageSize * (nextPage.value - 1))
     );
     return {
+      folder: ref(''),
       uploader: ref(false),
+      newdir: ref(false),
       selected,
       columns,
       rows,
@@ -165,9 +113,14 @@ export default {
         }
       },
       addbox: ref(false),
-      search: ref(''),
-      box: ref('')
+      search: ref('')
     };
+  },
+  mounted() {
+    api.get('/storage').then((res) => {
+      this.seed = res.data;
+      console.log(this.fileitem);
+    });
   }
 };
 </script>
@@ -196,8 +149,7 @@ export default {
       <div class="main">{{ node }}</div>
       <q-space />
       <q-btn label="Upload" class="button q-mr-md" @click="uploader = true" />
-
-      <q-btn label="New Folder" class="button" />
+      <q-btn label="New Folder" class="button" @click="newdir = true" />
     </div>
   </div>
   <div>
@@ -232,6 +184,32 @@ export default {
       />
     </q-card>
   </q-dialog>
+  <q-dialog v-model="newdir">
+    <q-card>
+      <q-card-section class="row items-center q-pb-none">
+        <div class="text-h4" style="font-family: AppleSDGothicNeoB00">
+          New Folder
+        </div>
+        <q-space />
+        <q-btn icon="close" flat round dense v-close-popup />
+      </q-card-section>
+      <q-card-section>
+        <span style="font-family: AppleSDGothicNeoM00">
+          You can create Folder.
+        </span>
+        <q-input
+          outlined
+          v-model="folder"
+          label="Enter Folder Name"
+          class="newbox"
+        />
+      </q-card-section>
+      <q-card-actions align="right">
+        <q-btn flat no-caps label="Cancel" color="black" v-close-popup />
+        <q-btn flat no-caps label="Add" v-close-popup style="color: #7f7aee" />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 </template>
 
 <style lang="scss" scoped>
@@ -239,18 +217,9 @@ export default {
   width: 112px;
   height: 29.25px;
 }
-.bigbox {
-  width: 200px;
-  height: 200px;
-}
 .main {
   font-family: AppleSDGothicNeoEB00;
   font-size: 28px;
-  color: #f9f9fd;
-}
-.sub {
-  font-family: AppleSDGothicNeoEB00;
-  font-size: 16px;
   color: #f9f9fd;
 }
 .button {

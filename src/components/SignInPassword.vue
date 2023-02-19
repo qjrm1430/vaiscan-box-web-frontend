@@ -2,12 +2,19 @@
 import { ref } from 'vue';
 import { api } from 'src/boot/axios';
 import { useRouter } from 'vue-router';
+import { useQuasar } from 'quasar';
 
 export default {
+  data() {
+    return {
+      username: ''
+    };
+  },
   setup() {
     const inputRef = ref();
     const password = ref();
     const router = useRouter();
+    const $q = useQuasar();
 
     return {
       password,
@@ -17,15 +24,29 @@ export default {
         const data = {
           password: password.value
         };
-        api.post('/auth/signin', data).then((res) => {
+        api.post('/auth/signin/password', data).then((res) => {
+          $q.cookies.remove('connect.sid');
+          $q.cookies.set('accessToken', res.data.accessToken);
+          $q.cookies.set('name', res.data.alias);
+
           router.push({ path: '/storage' });
-          console.log(res);
         });
       },
       reset() {
         inputRef.value.resetValidation();
       }
     };
+  },
+  mounted() {
+    const router = useRouter();
+    api
+      .get('/auth/signin/password')
+      .then((res) => {
+        this.username = res.data;
+      })
+      .catch(() => {
+        router.push({ path: '/signin/username' });
+      });
   }
 };
 </script>
@@ -35,8 +56,7 @@ export default {
       <q-card-section align="center">
         <q-img src="src/assets/LoginHamTop.svg" class="top" />
         <div class="ahaa" style="margin-bottom: 10px">
-          Welcome!
-          <router-link to="/signup" class="user">Sign up</router-link>
+          Welcome! <span style="color: powderblue">{{ username }}</span>
         </div>
         <div>
           <q-form @submit="onSubmit">

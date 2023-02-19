@@ -207,7 +207,7 @@ export default {
       :rows="rows"
       :columns="columns"
       :loading="loading"
-      row-key="name"
+      row-key="title"
       :filter="search"
       virtual-scroll
       :virtual-scroll-item-size="48"

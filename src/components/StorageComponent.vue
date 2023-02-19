@@ -45,7 +45,6 @@ const columns = [
 //     size: 6.0,
 //     security: 'Checking'
 // }
-var seed = ref(this.seed);
 
 // we generate lots of rows here
 let allRows = [];
@@ -63,7 +62,7 @@ export default {
   data() {
     return {
       link: '',
-      seed: []
+      seeds: []
     };
   },
   setup() {
@@ -81,7 +80,7 @@ export default {
       selected,
       columns,
       rows,
-
+      seed: ref(this.seeds),
       nextPage,
       loading,
 

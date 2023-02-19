@@ -1,5 +1,7 @@
 <script>
 import { ref, computed, nextTick } from 'vue';
+import { api } from 'src/boot/axios';
+
 const columns = [
   // {
   //   name: 'Type',
@@ -127,6 +129,7 @@ export default {
       allRows.slice(0, pageSize * (nextPage.value - 1))
     );
     return {
+      uploader: ref(false),
       selected,
       columns,
       rows,
@@ -192,16 +195,8 @@ export default {
     <div class="q-pa-lg fit row content-center justify-between no-wrap">
       <div class="main">{{ node }}</div>
       <q-space />
-      <q-btn label="Upload" class="button q-mr-md">
-        <q-menu anchor="bottom middle" self="top middle">
-          <q-item clickable>
-            <q-item-section>Upload Files</q-item-section>
-          </q-item>
-          <q-item clickable>
-            <q-item-section>Upload Folder</q-item-section>
-          </q-item>
-        </q-menu>
-      </q-btn>
+      <q-btn label="Upload" class="button q-mr-md" @click="uploader = true" />
+
       <q-btn label="New Folder" class="button" />
     </div>
   </div>
@@ -226,6 +221,17 @@ export default {
     />
     <!--<div class="q-mt-md">Selected: {{ JSON.stringify(selected) }}</div>-->
   </div>
+  <q-dialog v-model="uploader">
+    <q-card>
+      <q-uploader
+        dark
+        url="http://localhost:8081/storage/upload"
+        label="Choose file to upload"
+        multiple
+        style="max-width: 600px; width: 400px; height: 400px"
+      />
+    </q-card>
+  </q-dialog>
 </template>
 
 <style lang="scss" scoped>

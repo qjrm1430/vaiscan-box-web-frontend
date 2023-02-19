@@ -18,21 +18,27 @@
       />
 
       <q-separator dark />
-      <q-img
-        src="src/assets/Login.svg"
-        class="q-my-md self-center"
-        style="max-width: 30%"
-      />
+      <q-btn flat to="/signin/username" class="q-my-md">
+        <q-img src="src/assets/Login.svg" style="max-width: 30%" />
+      </q-btn>
 
       <q-separator dark />
 
-      <div class="row q-pa-md self-center">
-        <q-img src="src/assets/Box.svg" style="width: 64px; height: 26px" />
+      <div class="row q-pa-sm q-py-md self-center">
+        <q-btn disable flat to="/storage">
+          <q-img
+            src="src/assets/CheckBox.svg"
+            style="width: 64px; height: 26px"
+          />
+        </q-btn>
         <q-separator dark vertical class="q-mx-lg" />
-        <q-img
-          src="src/assets/CheckScan.svg"
-          style="width: 64px; height: 22px; margin-top: 4px"
-        />
+
+        <q-btn flat to="/">
+          <q-img
+            src="src/assets/Scan.svg"
+            style="width: 64px; height: 22px; margin-top: 4px"
+          />
+        </q-btn>
       </div>
 
       <q-separator dark />
@@ -54,7 +60,7 @@
             />
           </template>
         </q-input>
-        <q-scroll-area dark style="height: 430px">
+        <q-scroll-area dark style="height: 400px">
           <q-tree
             dark
             :nodes="sample"

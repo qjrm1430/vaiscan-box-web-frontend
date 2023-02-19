@@ -1,5 +1,13 @@
-<script setup lang="ts">
-import {} from 'vue';
+<script lang="ts">
+import { ref } from 'vue';
+
+export default {
+  setup() {
+    return {
+      uploader: ref(false)
+    };
+  }
+};
 </script>
 <template>
   <div class="flex flex-center column">
@@ -21,7 +29,13 @@ import {} from 'vue';
       />
     </div>
     <div class="q-ma-md">
-      <q-btn no-caps icon="search" label="Choose file to scan" class="button" />
+      <q-btn
+        no-caps
+        icon="search"
+        label="Choose file to scan"
+        class="button"
+        @click="uploader = true"
+      />
     </div>
     <div style="max-width: 710px" class="q-my-xl">
       <span class="main">
@@ -32,6 +46,17 @@ import {} from 'vue';
       </span>
     </div>
   </div>
+  <q-dialog v-model="uploader">
+    <q-card>
+      <q-uploader
+        dark
+        url="http://localhost:8081/upload"
+        label="Please select the file to scan"
+        multiple
+        style="max-width: 600px; width: 400px; height: 400px"
+      />
+    </q-card>
+  </q-dialog>
 </template>
 <style lang="scss" scoped>
 .main {

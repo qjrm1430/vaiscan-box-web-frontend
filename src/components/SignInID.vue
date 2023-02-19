@@ -50,17 +50,6 @@ export default {
             <q-btn no-caps label="Continue" type="submit" class="submit" />
           </q-form>
         </div>
-
-        <q-separator dark class="q-ma-md" />
-
-        <div>
-          <q-btn
-            no-caps
-            label="Sign in with Kakao"
-            type="submit"
-            class="kakao"
-          />
-        </div>
         <div>
           <q-img src="src/assets/HamBottom.svg" class="bottom" />
         </div>

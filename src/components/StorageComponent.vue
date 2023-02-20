@@ -1,27 +1,19 @@
 <script>
-import { ref, computed, nextTick } from 'vue';
+import { ref } from 'vue';
 import { api } from 'src/boot/axios';
 
 const columns = [
+  // {
+  //   name: 'Type',
+  //   label: 'Type',
+  //   field: 'type'
+  // },
   {
-    name: 'Type',
-    label: 'Type',
-    field: 'file_type'
-  },
-  {
-    name: 'Title',
+    name: 'Name',
     required: true,
-    label: 'Title',
+    label: 'Name',
     align: 'left',
-    field: 'title',
-    sortable: true
-  },
-  {
-    name: 'Date Uploaded',
-    required: true,
-    align: 'right',
-    label: 'Date Uploaded',
-    field: 'upload_time',
+    field: 'original_name',
     sortable: true
   },
   {
@@ -32,6 +24,21 @@ const columns = [
     sortable: true
   },
   {
+    name: 'Type',
+    label: 'Type',
+    field: 'file_type',
+    align: 'right',
+    sortable: true
+  },
+  {
+    name: 'Date Modified',
+    required: true,
+    align: 'right',
+    label: 'Date Modified',
+    field: 'upload_time',
+    sortable: true
+  },
+  {
     name: 'Security',
     label: 'Security',
     field: 'status',
@@ -39,51 +46,18 @@ const columns = [
     sortable: true
   }
 ];
-// {
-//     title: 'Frozen Yogurt',
-//     date_modified: 159,
-//     size: 6.0,
-//     security: 'Checking'
-// }
-
-// we generate lots of rows here
-let allRows = [];
-for (let i = 0; i < 1000; i++) {
-  allRows = allRows.concat(seed.value.slice(0).map((r) => ({ ...r })));
-}
-allRows.forEach((row, index) => {
-  row.index = index;
-});
-
-const pageSize = 50;
-const lastPage = Math.ceil(allRows.length / pageSize);
 
 export default {
-  data() {
-    return {
-      link: '',
-      seeds: []
-    };
-  },
   setup() {
     const selected = ref([]);
-    const nextPage = ref(2);
-    const loading = ref(false);
-
-    const rows = computed(() =>
-      allRows.slice(0, pageSize * (nextPage.value - 1))
-    );
+    const rows = ref([]);
+    const node = ref('/');
     return {
-      folder: ref(''),
       uploader: ref(false),
-      newdir: ref(false),
       selected,
       columns,
       rows,
-      seed: ref(this.seeds),
-      nextPage,
-      loading,
-
+      node,
       pagination: { rowsPerPage: 0 },
       getSelectedString() {
         return selected.value.length === 0
@@ -92,34 +66,55 @@ export default {
               selected.value.length > 1 ? 's' : ''
             } selected of ${rows.value.length}`;
       },
-      onScroll({ to, ref }) {
-        const lastIndex = rows.value.length - 1;
-
-        if (
-          loading.value !== true &&
-          nextPage.value < lastPage &&
-          to === lastIndex
-        ) {
-          loading.value = true;
-
-          setTimeout(() => {
-            nextPage.value++;
-            nextTick(() => {
-              ref.refresh();
-              loading.value = false;
+      onClick(evt, row, index) {
+        if (row.file_type === 'dir') {
+          let path = '';
+          if (row.path === '/') {
+            path = '/' + row.original_name;
+          } else {
+            path = row.path + '/' + row.original_name;
+          }
+          const encodedPath = btoa(path);
+          api.get('storage', { params: { path: encodedPath } }).then((res) => {
+            node.value = path;
+            rows.value = res.data;
+          });
+        } else {
+          api
+            .post(
+              'storage/download',
+              { storage_id: row.storage_id },
+              { responseType: 'blob' }
+            )
+            .then((res) => {
+              const url = window.URL.createObjectURL(new Blob([res.data]));
+              const link = document.createElement('a');
+              link.href = url;
+              link.setAttribute('download', row.original_name);
+              document.body.appendChild(link);
+              link.click();
             });
-          }, 500);
         }
       },
       addbox: ref(false),
-      search: ref('')
+      search: ref(''),
+      box: ref('')
     };
   },
-  mounted() {
-    api.get('/storage').then((res) => {
-      this.seed = res.data;
-      console.log(this.fileitem);
-    });
+  created() {
+    this.pageLoad();
+  },
+  methods: {
+    pageLoad() {
+      api.get('storage').then((res) => {
+        const path = res.data[0].path + res.data[0].original_name;
+        const encodedPath = btoa(path);
+        api.get('storage', { params: { path: encodedPath } }).then((res) => {
+          this.node = path;
+          this.rows = res.data;
+        });
+      });
+    }
   }
 };
 </script>
@@ -148,7 +143,8 @@ export default {
       <div class="main">{{ node }}</div>
       <q-space />
       <q-btn label="Upload" class="button q-mr-md" @click="uploader = true" />
-      <q-btn label="New Folder" class="button" @click="newdir = true" />
+
+      <q-btn label="New Folder" class="button" />
     </div>
   </div>
   <div>
@@ -157,18 +153,16 @@ export default {
       class="my-sticky-dynamic"
       :rows="rows"
       :columns="columns"
-      :loading="loading"
-      row-key="title"
+      row-key="name"
       :filter="search"
       virtual-scroll
       :virtual-scroll-item-size="48"
       :virtual-scroll-sticky-size-start="48"
-      :pagination="pagination"
-      :rows-per-page-options="[0]"
       :selected-rows-label="getSelectedString"
-      @virtual-scroll="onScroll"
       selection="multiple"
       v-model:selected="selected"
+      :rows-per-page-options="[0]"
+      @row-click="onClick"
     />
     <!--<div class="q-mt-md">Selected: {{ JSON.stringify(selected) }}</div>-->
   </div>
@@ -183,32 +177,6 @@ export default {
       />
     </q-card>
   </q-dialog>
-  <q-dialog v-model="newdir">
-    <q-card>
-      <q-card-section class="row items-center q-pb-none">
-        <div class="text-h4" style="font-family: AppleSDGothicNeoB00">
-          New Folder
-        </div>
-        <q-space />
-        <q-btn icon="close" flat round dense v-close-popup />
-      </q-card-section>
-      <q-card-section>
-        <span style="font-family: AppleSDGothicNeoM00">
-          You can create Folder.
-        </span>
-        <q-input
-          outlined
-          v-model="folder"
-          label="Enter Folder Name"
-          class="newbox"
-        />
-      </q-card-section>
-      <q-card-actions align="right">
-        <q-btn flat no-caps label="Cancel" color="black" v-close-popup />
-        <q-btn flat no-caps label="Add" v-close-popup style="color: #7f7aee" />
-      </q-card-actions>
-    </q-card>
-  </q-dialog>
 </template>
 
 <style lang="scss" scoped>
@@ -216,9 +184,18 @@ export default {
   width: 112px;
   height: 29.25px;
 }
+.bigbox {
+  width: 200px;
+  height: 200px;
+}
 .main {
   font-family: AppleSDGothicNeoEB00;
   font-size: 28px;
+  color: #f9f9fd;
+}
+.sub {
+  font-family: AppleSDGothicNeoEB00;
+  font-size: 16px;
   color: #f9f9fd;
 }
 .button {

@@ -1,5 +1,7 @@
 <script lang="ts">
 import { ref } from 'vue';
+import { api } from 'src/boot/axios';
+import { useRouter } from 'vue-router';
 
 export default {
   setup() {
@@ -8,6 +10,15 @@ export default {
       search: ref(''),
       box: ref('')
     };
+  },
+  methods: {
+    createBox() {
+      const router = useRouter();
+      console.log(this.box);
+      api.post('storage/create', { name: this.box, path: '/' }).then(() => {
+        router.push({ path: '/storage' });
+      });
+    }
   }
 };
 </script>
@@ -62,7 +73,14 @@ export default {
 
       <q-card-actions align="right">
         <q-btn flat no-caps label="Cancel" color="black" v-close-popup />
-        <q-btn flat no-caps label="Add" v-close-popup style="color: #7f7aee" />
+        <q-btn
+          flat
+          no-caps
+          label="Add"
+          v-close-popup
+          style="color: #7f7aee"
+          @click="createBox"
+        />
       </q-card-actions>
     </q-card>
   </q-dialog>

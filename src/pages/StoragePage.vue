@@ -1,26 +1,37 @@
 <template>
   <q-page padding>
-    <Storage v-if="visible < 100" />
-    <NoFileStorage v-else-if="visible < 200" />
-    <EmptyStorage v-else />
+    <Storage v-if="visible == 0" />
+    <EmptyStorage v-else-if="visible == 1" />
   </q-page>
 </template>
 <script lang="ts">
 import EmptyStorage from 'src/components/EmptyStorageComponenet.vue';
 import Storage from '/src/components/StorageComponent.vue';
-import NoFileStorage from '/src/components/NoFileStorageComponent.vue';
+import { ref } from 'vue';
+import { api } from 'src/boot/axios';
 
 export default {
   name: 'StoragePage',
   components: {
-    NoFileStorage,
     EmptyStorage,
     Storage
   },
   setup() {
+    const visible = ref(-1);
     return {
-      visible: 80
+      visible
     };
+  },
+  created() {
+    this.onLoad();
+  },
+  methods: {
+    onLoad() {
+      api.get('storage').then((res) => {
+        if (res.data.length === 0) this.visible = 1;
+        else this.visible = 0;
+      });
+    }
   }
 };
 </script>

@@ -66,7 +66,7 @@ export default {
               selected.value.length > 1 ? 's' : ''
             } selected of ${rows.value.length}`;
       },
-      onClick(evt, row, index) {
+      onClick(evt, row) {
         if (row.file_type === 'dir') {
           let path = '';
           if (row.path === '/') {

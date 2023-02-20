@@ -44,7 +44,7 @@ export default {
         <div class="ahaa">Create Your Account</div>
         <div class="ahaa" style="margin-bottom: 10px">
           Already have an account?
-          <router-link to="/login" class="link">Login</router-link>
+          <router-link to="/signin/username" class="link">Login</router-link>
         </div>
         <q-form @submit="onSubmit">
           <q-input

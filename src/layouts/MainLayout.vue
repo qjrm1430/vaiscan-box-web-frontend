@@ -1,3 +1,40 @@
+<script lang="ts">
+import { ref } from 'vue';
+import { useQuasar } from 'quasar';
+import { api } from 'src/boot/axios';
+
+export default {
+  setup() {
+    const leftDrawerOpen = ref(false);
+    const loginstatus = ref(-1);
+    const $q = useQuasar();
+    const username = $q.cookies.get('name');
+    return {
+      leftDrawerOpen,
+      loginstatus,
+      username,
+      toggleLeftDrawer() {
+        leftDrawerOpen.value = !leftDrawerOpen.value;
+      }
+    };
+  },
+  created() {
+    const $q = useQuasar();
+
+    if ($q.cookies.has('accessToken')) this.loginstatus = 1;
+    else this.loginstatus = 0;
+  },
+  methods: {
+    logout() {
+      api.post('/auth/signout').then(() => {
+        console.log('logout');
+        window.location.reload();
+      });
+    }
+  }
+};
+</script>
+
 <template>
   <q-layout view="lHh lpr lFf" style="background-color: #121214">
     <q-drawer
@@ -18,9 +55,24 @@
       />
 
       <q-separator dark />
-      <q-btn flat to="/signin/username" class="q-my-md">
+
+      <q-btn flat class="q-my-md" v-if="loginstatus == 1">
+        <span class="login"> {{ username }} </span>
+        <q-menu anchor="bottom middle" self="top middle">
+          <q-item clickable @click="logout()">
+            <q-item-section>Logout</q-item-section>
+          </q-item>
+        </q-menu>
+      </q-btn>
+      <q-btn
+        flat
+        to="/signin/username"
+        class="q-my-md"
+        v-else-if="loginstatus == 0"
+      >
         <q-img src="src/assets/Login.svg" style="max-width: 30%" />
       </q-btn>
+
       <q-separator dark />
 
       <div class="row q-pa-sm q-py-md self-center">
@@ -45,26 +97,15 @@
   </q-layout>
 </template>
 
-<script>
-import { ref } from 'vue';
-
-export default {
-  setup() {
-    const leftDrawerOpen = ref(false);
-
-    return {
-      leftDrawerOpen,
-      toggleLeftDrawer() {
-        leftDrawerOpen.value = !leftDrawerOpen.value;
-      }
-    };
-  }
-};
-</script>
 <style lang="scss" scoped>
 .my-custom-alignment {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.login {
+  font-family: AppleSDGothicNeoB00;
+  font-size: 20px;
+  color: #ebebf1;
 }
 </style>

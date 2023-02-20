@@ -1,11 +1,50 @@
-<script lang="ts">
+<script>
+import { api } from 'src/boot/axios';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default {
   setup() {
+    const router = useRouter();
+
     return {
-      uploader: ref(false)
+      uploader: ref(false),
+      routing() {
+        router.push({ path: '/result' });
+      }
     };
+  },
+  methods: {
+    handleFileUpload() {
+      // Create a hidden file input element
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.style.display = 'none';
+      // Add an event listener to retrieve the selected file(s)
+      input.addEventListener('change', (event) => {
+        const file = event.target.files[0]; // Get the first file selected by the user
+
+        // Create a new FormData object and add the file to it
+        const formData = new FormData();
+        formData.append('files', file);
+        formData.append('isCover', false);
+        // Use Axios to upload the file to the server
+        api
+          .post('/upload', formData)
+          .then((res) => {
+            console.log(res);
+            this.routing();
+          })
+          .catch((error) => {
+            console.error('Error uploading file:', error);
+          });
+      });
+
+      // Click the hidden file input to trigger the file input dialog
+      document.body.appendChild(input);
+      input.click();
+      document.body.removeChild(input);
+    }
   }
 };
 </script>
@@ -34,7 +73,7 @@ export default {
         icon="search"
         label="Choose file to scan"
         class="button"
-        @click="uploader = true"
+        @click="handleFileUpload()"
       />
     </div>
     <div style="max-width: 710px" class="q-my-xl">
@@ -46,17 +85,6 @@ export default {
       </span>
     </div>
   </div>
-  <q-dialog v-model="uploader">
-    <q-card>
-      <q-uploader
-        dark
-        url="http://localhost:8081/upload"
-        label="Please select the file to scan"
-        multiple
-        style="max-width: 600px; width: 400px; height: 400px"
-      />
-    </q-card>
-  </q-dialog>
 </template>
 <style lang="scss" scoped>
 .main {

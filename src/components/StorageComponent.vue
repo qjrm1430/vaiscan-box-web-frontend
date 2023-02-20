@@ -3,11 +3,6 @@ import { ref } from 'vue';
 import { api } from 'src/boot/axios';
 
 const columns = [
-  // {
-  //   name: 'Type',
-  //   label: 'Type',
-  //   field: 'type'
-  // },
   {
     name: 'Name',
     required: true,
@@ -54,11 +49,11 @@ export default {
     const node = ref('/');
     return {
       uploader: ref(false),
+      newdir: ref(false),
       selected,
       columns,
       rows,
       node,
-      pagination: { rowsPerPage: 0 },
       getSelectedString() {
         return selected.value.length === 0
           ? ''
@@ -97,12 +92,16 @@ export default {
         }
       },
       addbox: ref(false),
-      search: ref(''),
-      box: ref('')
+      search: ref('')
     };
   },
   created() {
     this.pageLoad();
+  },
+  mounted() {
+    api.get('/storage').then((res) => {
+      this.rows = res.data;
+    });
   },
   methods: {
     pageLoad() {
@@ -114,6 +113,73 @@ export default {
           this.rows = res.data;
         });
       });
+    },
+    handleFileUploadc() {
+      // Create a hidden file input element
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.style.display = 'none';
+
+      // Add an event listener to retrieve the selected file(s)
+      input.addEventListener('change', (event) => {
+        const file = event.target.files[0]; // Get the first file selected by the user
+
+        // Create a new FormData object and add the file to it
+        const formData = new FormData();
+        formData.append('files', file);
+        formData.append('path', '/');
+        formData.append('isCover', true);
+        // Use Axios to upload the file to the server
+        api
+          .post('/storage/upload', formData)
+          .then((res) => {
+            console.log(res);
+            window.location.reload();
+
+            // Do something with the server response, if needed
+          })
+          .catch((error) => {
+            console.error('Error uploading file:', error);
+          });
+      });
+
+      // Click the hidden file input to trigger the file input dialog
+      document.body.appendChild(input);
+      input.click();
+      document.body.removeChild(input);
+    },
+    handleFileUpload() {
+      // Create a hidden file input element
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.style.display = 'none';
+
+      // Add an event listener to retrieve the selected file(s)
+      input.addEventListener('change', (event) => {
+        const file = event.target.files[0]; // Get the first file selected by the user
+
+        // Create a new FormData object and add the file to it
+        const formData = new FormData();
+        formData.append('files', file);
+        formData.append('isCover', false);
+        // Use Axios to upload the file to the server
+        api
+          .post('/storage/upload', formData)
+          .then((res) => {
+            console.log(res);
+            window.location.reload();
+
+            // Do something with the server response, if needed
+          })
+          .catch((error) => {
+            console.error('Error uploading file:', error);
+          });
+      });
+
+      // Click the hidden file input to trigger the file input dialog
+      document.body.appendChild(input);
+      input.click();
+      document.body.removeChild(input);
     }
   }
 };
@@ -142,9 +208,21 @@ export default {
     <div class="q-pa-lg fit row content-center justify-between no-wrap">
       <div class="main">{{ node }}</div>
       <q-space />
-      <q-btn label="Upload" class="button q-mr-md" @click="uploader = true" />
-
-      <q-btn label="New Folder" class="button" />
+      <q-btn label="Upload" class="button q-mr-md self-center">
+        <q-menu anchor="bottom middle" self="top middle">
+          <q-item clickable @click="handleFileUpload()">
+            <q-item-section>Upload - skip</q-item-section>
+          </q-item>
+          <q-item clickable @click="handleFileUploadc()">
+            <q-item-section>Upload - overwrite</q-item-section>
+          </q-item>
+        </q-menu>
+      </q-btn>
+      <q-btn
+        label="New Folder"
+        class="button self-center"
+        @click="newdir = true"
+      />
     </div>
   </div>
   <div>
@@ -153,28 +231,39 @@ export default {
       class="my-sticky-dynamic"
       :rows="rows"
       :columns="columns"
-      row-key="name"
+      row-key="title"
       :filter="search"
-      virtual-scroll
-      :virtual-scroll-item-size="48"
-      :virtual-scroll-sticky-size-start="48"
       :selected-rows-label="getSelectedString"
       selection="multiple"
       v-model:selected="selected"
-      :rows-per-page-options="[0]"
       @row-click="onClick"
     />
     <!--<div class="q-mt-md">Selected: {{ JSON.stringify(selected) }}</div>-->
   </div>
-  <q-dialog v-model="uploader">
+  <q-dialog v-model="newdir">
     <q-card>
-      <q-uploader
-        dark
-        url="http://localhost:8081/storage/upload"
-        label="Choose file to upload"
-        multiple
-        style="max-width: 600px; width: 400px; height: 400px"
-      />
+      <q-card-section class="row items-center q-pb-none">
+        <div class="text-h4" style="font-family: AppleSDGothicNeoB00">
+          New Folder
+        </div>
+        <q-space />
+        <q-btn icon="close" flat round dense v-close-popup />
+      </q-card-section>
+      <q-card-section>
+        <span style="font-family: AppleSDGothicNeoM00">
+          You can create Folder.
+        </span>
+        <q-input
+          outlined
+          v-model="folder"
+          label="Enter Folder Name"
+          class="newbox"
+        />
+      </q-card-section>
+      <q-card-actions align="right">
+        <q-btn flat no-caps label="Cancel" color="black" v-close-popup />
+        <q-btn flat no-caps label="Add" v-close-popup style="color: #7f7aee" />
+      </q-card-actions>
     </q-card>
   </q-dialog>
 </template>

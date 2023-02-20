@@ -82,11 +82,4 @@ export default {
   font-size: 18px;
   color: #f7fdff;
 }
-.kakao {
-  width: 360px;
-  font-family: AppleSDGothicNeoB00;
-  background-color: #ead02c;
-  font-size: 18px;
-  color: #f7fdff;
-}
 </style>

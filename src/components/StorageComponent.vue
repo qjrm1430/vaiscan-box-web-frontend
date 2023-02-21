@@ -46,7 +46,7 @@ export default {
   setup() {
     const selected = ref([]);
     const rows = ref([]);
-    const node = ref('/');
+    const node = ref();
     return {
       uploader: ref(false),
       newdir: ref(false),
@@ -98,11 +98,6 @@ export default {
   created() {
     this.pageLoad();
   },
-  mounted() {
-    api.get('/storage').then((res) => {
-      this.rows = res.data;
-    });
-  },
   methods: {
     pageLoad() {
       api.get('storage').then((res) => {
@@ -119,15 +114,18 @@ export default {
       const input = document.createElement('input');
       input.type = 'file';
       input.style.display = 'none';
+      input.multiple = 'ture';
 
       // Add an event listener to retrieve the selected file(s)
       input.addEventListener('change', (event) => {
-        const file = event.target.files[0]; // Get the first file selected by the user
+        const files = event.target.files; // Get the first file selected by the user
 
         // Create a new FormData object and add the file to it
         const formData = new FormData();
-        formData.append('files', file);
-        formData.append('path', '/');
+        for (let file of files) {
+          formData.append('files', file);
+        }
+        formData.append('path', this.node);
         formData.append('isCover', true);
         // Use Axios to upload the file to the server
         api
@@ -153,15 +151,19 @@ export default {
       const input = document.createElement('input');
       input.type = 'file';
       input.style.display = 'none';
+      input.multiple = 'ture';
 
       // Add an event listener to retrieve the selected file(s)
       input.addEventListener('change', (event) => {
-        const file = event.target.files[0]; // Get the first file selected by the user
+        const files = event.target.files; // Get the first file selected by the user
 
         // Create a new FormData object and add the file to it
         const formData = new FormData();
-        formData.append('files', file);
+        for (let file of files) {
+          formData.append('files', file);
+        }
         formData.append('isCover', false);
+        formData.append('path', this.node);
         // Use Axios to upload the file to the server
         api
           .post('/storage/upload', formData)

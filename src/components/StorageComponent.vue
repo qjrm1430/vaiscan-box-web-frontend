@@ -114,7 +114,8 @@ export default {
   methods: {
     createBox() {
       api.post('storage/create', { name: this.box, path: '/' }).then(() => {
-        window.location.reload();
+        this.getFileList();
+        this.box = '';
       });
     },
     pageLoad() {
@@ -199,16 +200,8 @@ export default {
         .post('storage/create', { name: this.folder, path: this.node })
         .then(() => {
           this.getFileList();
+          this.folder = '';
         });
-    },
-    remove() {
-      const removeData = { storage_id: [] };
-      this.selected.forEach((select) => {
-        removeData.storage_id.push(select.storage_id);
-      });
-      api.post('storage/delete', removeData).then(() => {
-        this.getFileList();
-      });
     }
   }
 };
@@ -362,9 +355,9 @@ export default {
         <q-btn
           flat
           no-caps
-          label="Delete"
+          label="Add"
           v-close-popup
-          style="color: #f00202"
+          style="color: #7f7aee"
           @click="remove()"
         />
       </q-card-actions>

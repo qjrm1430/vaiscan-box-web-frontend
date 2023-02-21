@@ -200,6 +200,15 @@ export default {
         .then(() => {
           this.getFileList();
         });
+    },
+    remove() {
+      const removeData = { storage_id: [] };
+      this.selected.forEach((select) => {
+        removeData.storage_id.push(select.storage_id);
+      });
+      api.post('storage/delete', removeData).then(() => {
+        this.getFileList();
+      });
     }
   }
 };
@@ -353,9 +362,9 @@ export default {
         <q-btn
           flat
           no-caps
-          label="Add"
+          label="Delete"
           v-close-popup
-          style="color: #7f7aee"
+          style="color: #f00202"
           @click="remove()"
         />
       </q-card-actions>

@@ -31,7 +31,9 @@ const columns = [
     align: 'right',
     label: 'Date Modified',
     field: 'upload_time',
-    sortable: true
+    sortable: true,
+    format: (val) =>
+      new Date(val).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul' })
   },
   {
     name: 'Security',
@@ -233,7 +235,7 @@ export default {
       class="my-sticky-dynamic"
       :rows="rows"
       :columns="columns"
-      row-key="title"
+      row-key="original_name"
       :filter="search"
       :selected-rows-label="getSelectedString"
       selection="multiple"

@@ -20,6 +20,10 @@ export default {
 
     function getTreeData() {
       api.get('/storage/dir').then((res) => {
+        res.data = res.data.filter((dir) => {
+          const pathArray = dir.path.split('/');
+          return pathArray.length < 4;
+        });
         res.data.sort(function (a: any, b: any) {
           return a.path - b.path;
         });
@@ -39,11 +43,15 @@ export default {
               });
               tempArray = tempArray[index].children;
             }
-            tempArray.push({
+            const pushData = {
               label: dir.original_name,
               avatar: '/src/assets/folder.svg',
               children: []
-            });
+            };
+            if (arrayPath.length === 3) {
+              delete pushData.children;
+            }
+            tempArray.push(pushData);
           }
         }
       });

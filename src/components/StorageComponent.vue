@@ -2,6 +2,18 @@
 import { ref } from 'vue';
 import { api } from 'src/boot/axios';
 
+function formatSize(val) {
+  if (val === null) {
+    return '';
+  } else if (val < 1024) {
+    return val + ' B';
+  } else if (val < 1024 * 1024) {
+    return (val / 1024).toFixed(2) + ' KB';
+  } else {
+    return (val / (1024 * 1024)).toFixed(2) + ' MB';
+  }
+}
+
 const columns = [
   {
     name: 'Name',
@@ -9,21 +21,37 @@ const columns = [
     label: 'Name',
     align: 'left',
     field: 'original_name',
-    sortable: true
+    sortable: true,
+    format: (val) => {
+      const extensionIndex = val.lastIndexOf('.');
+      if (extensionIndex > -1) {
+        return val.slice(0, extensionIndex);
+      }
+      return val;
+    }
   },
   {
     name: 'Size',
     label: 'Size',
     field: 'size',
     align: 'right',
-    sortable: true
+    sortable: true,
+    format: (val) => formatSize(val)
   },
   {
     name: 'Type',
     label: 'Type',
     field: 'file_type',
     align: 'right',
-    sortable: true
+    sortable: true,
+    format: (val, row) => {
+      if (row.original_name == row.original_name.split('.').pop()) {
+        return 'DIR';
+      } else {
+        const extension = row.original_name.split('.').pop();
+        return extension.toUpperCase();
+      }
+    }
   },
   {
     name: 'Date Modified',

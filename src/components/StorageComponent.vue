@@ -1,7 +1,6 @@
 <script>
 import { ref } from 'vue';
 import { api } from 'src/boot/axios';
-import StorageLayout from 'src/layouts/StorageLayout.vue';
 
 const columns = [
   {
@@ -50,8 +49,8 @@ export default {
     const selected = ref([]);
     const rows = ref([]);
     const node = ref();
-    const folder = ref();
-
+    const folder = ref('');
+    const box = ref('');
     function getFileList() {
       api.get('storage', { params: { path: btoa(node.value) } }).then((res) => {
         rows.value = res.data;
@@ -60,6 +59,9 @@ export default {
     return {
       uploader: ref(false),
       newdir: ref(false),
+      addbox: ref(false),
+      del: ref(false),
+      box,
       selected,
       columns,
       rows,
@@ -72,6 +74,9 @@ export default {
           : `${selected.value.length} record${
               selected.value.length > 1 ? 's' : ''
             } selected of ${rows.value.length}`;
+      },
+      delete() {
+        return selected.value.length === 0;
       },
       onClick(evt, row) {
         if (row.file_type === 'dir') {
@@ -100,7 +105,6 @@ export default {
             });
         }
       },
-      addbox: ref(false),
       search: ref('')
     };
   },
@@ -108,6 +112,11 @@ export default {
     this.pageLoad();
   },
   methods: {
+    createBox() {
+      api.post('storage/create', { name: this.box, path: '/' }).then(() => {
+        window.location.reload();
+      });
+    },
     pageLoad() {
       api.get('storage').then((res) => {
         const path = res.data[0].path + res.data[0].original_name;
@@ -214,11 +223,19 @@ export default {
           </template>
         </q-input>
       </q-form>
-      <q-img src="/src/assets/AddBox.svg" class="addbox q-ml-md" />
+      <q-btn flat class="self-center q-ml-md" @click="addbox = true">
+        <q-img src="/src/assets/AddBox.svg" class="addbox" />
+      </q-btn>
     </div>
     <div class="q-pa-lg fit row content-center justify-between no-wrap">
       <div class="main">{{ node }}</div>
       <q-space />
+      <q-btn
+        label="Delete"
+        class="button q-mr-md self-center"
+        @click="del = true"
+        v-if="!this.delete()"
+      />
       <q-btn label="Upload" class="button q-mr-md self-center">
         <q-menu anchor="bottom middle" self="top middle">
           <q-item clickable @click="handleFileUpload()">
@@ -281,6 +298,65 @@ export default {
           v-close-popup
           style="color: #7f7aee"
           @click="createFolder()"
+        />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+  <q-dialog v-model="addbox">
+    <q-card>
+      <q-card-section class="row items-center q-pb-none">
+        <div class="text-h4" style="font-family: AppleSDGothicNeoB00">
+          New Box
+        </div>
+        <q-space />
+        <q-btn icon="close" flat round dense v-close-popup />
+      </q-card-section>
+
+      <q-card-section>
+        <span style="font-family: AppleSDGothicNeoM00"
+          >You can create box.</span
+        >
+        <q-input outlined v-model="box" label="Enter Box Name" class="newbox" />
+      </q-card-section>
+
+      <q-card-actions align="right">
+        <q-btn flat no-caps label="Cancel" color="black" v-close-popup />
+        <q-btn
+          flat
+          no-caps
+          label="Add"
+          v-close-popup
+          style="color: #7f7aee"
+          @click="createBox"
+        />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
+  <q-dialog v-model="del">
+    <q-card>
+      <q-card-section class="row items-center q-pb-none">
+        <div class="text-h4" style="font-family: AppleSDGothicNeoB00">
+          Delete
+        </div>
+        <q-space />
+        <q-btn icon="close" flat round dense v-close-popup />
+      </q-card-section>
+
+      <q-card-section>
+        <span style="font-family: AppleSDGothicNeoM00"
+          >Do you want to delete?</span
+        >
+      </q-card-section>
+
+      <q-card-actions align="right">
+        <q-btn flat no-caps label="Cancel" color="black" v-close-popup />
+        <q-btn
+          flat
+          no-caps
+          label="Add"
+          v-close-popup
+          style="color: #7f7aee"
+          @click="remove()"
         />
       </q-card-actions>
     </q-card>

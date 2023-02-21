@@ -18,29 +18,39 @@ export default {
     const username = $q.cookies.get('name');
     const treeData = ref<TreeData[]>([]);
 
-    const fetchData = () => {
+    function getTreeData() {
       api.get('/storage/dir').then((res) => {
         res.data.sort(function (a: any, b: any) {
           return a.path - b.path;
         });
-
         for (let dir of res.data) {
           if (dir.path === '/') {
             treeData.value.push({
-              label: res.data.original_name,
+              label: dir.original_name,
               avatar: '/src/assets/package.svg',
               children: []
             });
           } else {
             const arrayPath = dir.path.split('/');
-            treeData.value;
+            let tempArray = treeData.value;
+            for (let pathIndex = 1; arrayPath.length > pathIndex; pathIndex++) {
+              let index = tempArray.findIndex((data) => {
+                return data.label === arrayPath[pathIndex];
+              });
+              tempArray = tempArray[index].children;
+            }
+            tempArray.push({
+              label: dir.original_name,
+              avatar: '/src/assets/folder.svg',
+              children: []
+            });
           }
         }
       });
-    };
+    }
 
     onMounted(() => {
-      fetchData();
+      getTreeData();
     });
 
     return {
@@ -50,7 +60,7 @@ export default {
       filterRef,
       username,
       treeData,
-      fetchData,
+      getTreeData,
       box: ref(['New Box', 'New Box']),
 
       toggleLeftDrawer() {
@@ -59,67 +69,15 @@ export default {
       toggleRightDrawer() {
         rightDrawerOpen.value = !rightDrawerOpen.value;
       },
-      sample: [
-        {
-          label: 'New Box',
-          avatar: '/src/assets/package.svg',
-          children: [
-            {
-              label: 'Good food (with icon)',
-              avatar: '/src/assets/folder.svg',
-              children: [
-                { label: 'Quality ingredients' },
-                { label: 'Good recipe' }
-              ]
-            },
-            {
-              label: 'Good service (disabled node with icon)',
-              avatar: '/src/assets/folder.svg',
-              children: [
-                { label: 'Prompt attention' },
-                { label: 'Professional waiter' }
-              ]
-            },
-            {
-              label: 'Good service (disabled node with icon)',
-              avatar: '/src/assets/folder.svg',
-              children: [
-                { label: 'Prompt attention' },
-                { label: 'Professional waiter' }
-              ]
-            },
-            {
-              label: 'Good service (disabled node with icon)',
-              avatar: '/src/assets/folder.svg',
-              children: [
-                { label: 'Prompt attention' },
-                { label: 'Professional waiter' }
-              ]
-            },
-            {
-              label: 'Good service (disabled node with icon)',
-              avatar: '/src/assets/folder.svg',
-              children: [
-                { label: 'Prompt attention' },
-                { label: 'Professional waiter' }
-              ]
-            },
-            {
-              label: 'Pleasant surroundings (with icon)',
-              avatar: '/src/assets/folder.svg',
-              children: [
-                { label: 'Good table presentation' },
-                { label: 'Pleasing decor' }
-              ]
-            }
-          ]
-        }
-      ],
+
       resetFilter() {
         filter.value = '';
         filterRef.value.focus();
       }
     };
+  },
+  updated() {
+    console.log('update');
   },
   methods: {
     logout() {

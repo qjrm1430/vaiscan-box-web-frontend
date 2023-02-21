@@ -1,6 +1,7 @@
 <script>
 import { ref } from 'vue';
 import { api } from 'src/boot/axios';
+import StorageLayout from 'src/layouts/StorageLayout.vue';
 
 const columns = [
   {
@@ -49,6 +50,13 @@ export default {
     const selected = ref([]);
     const rows = ref([]);
     const node = ref();
+    const folder = ref();
+
+    function getFileList() {
+      api.get('storage', { params: { path: btoa(node.value) } }).then((res) => {
+        rows.value = res.data;
+      });
+    }
     return {
       uploader: ref(false),
       newdir: ref(false),
@@ -56,6 +64,8 @@ export default {
       columns,
       rows,
       node,
+      folder,
+      getFileList,
       getSelectedString() {
         return selected.value.length === 0
           ? ''
@@ -71,11 +81,8 @@ export default {
           } else {
             path = row.path + '/' + row.original_name;
           }
-          const encodedPath = btoa(path);
-          api.get('storage', { params: { path: encodedPath } }).then((res) => {
-            node.value = path;
-            rows.value = res.data;
-          });
+          node.value = path;
+          getFileList();
         } else {
           api
             .post(
@@ -104,11 +111,8 @@ export default {
     pageLoad() {
       api.get('storage').then((res) => {
         const path = res.data[0].path + res.data[0].original_name;
-        const encodedPath = btoa(path);
-        api.get('storage', { params: { path: encodedPath } }).then((res) => {
-          this.node = path;
-          this.rows = res.data;
-        });
+        this.node = path;
+        this.getFileList();
       });
     },
     handleFileUploadc() {
@@ -133,9 +137,7 @@ export default {
         api
           .post('/storage/upload', formData)
           .then((res) => {
-            console.log(res);
-            window.location.reload();
-
+            this.getFileList();
             // Do something with the server response, if needed
           })
           .catch((error) => {
@@ -170,9 +172,7 @@ export default {
         api
           .post('/storage/upload', formData)
           .then((res) => {
-            console.log(res);
-            window.location.reload();
-
+            this.getFileList();
             // Do something with the server response, if needed
           })
           .catch((error) => {
@@ -184,6 +184,13 @@ export default {
       document.body.appendChild(input);
       input.click();
       document.body.removeChild(input);
+    },
+    createFolder() {
+      api
+        .post('storage/create', { name: this.folder, path: this.node })
+        .then(() => {
+          this.getFileList();
+        });
     }
   }
 };
@@ -240,6 +247,7 @@ export default {
       :selected-rows-label="getSelectedString"
       selection="multiple"
       v-model:selected="selected"
+      :rows-per-page-options="[0]"
       @row-click="onClick"
     />
     <!--<div class="q-mt-md">Selected: {{ JSON.stringify(selected) }}</div>-->
@@ -266,7 +274,14 @@ export default {
       </q-card-section>
       <q-card-actions align="right">
         <q-btn flat no-caps label="Cancel" color="black" v-close-popup />
-        <q-btn flat no-caps label="Add" v-close-popup style="color: #7f7aee" />
+        <q-btn
+          flat
+          no-caps
+          label="Add"
+          v-close-popup
+          style="color: #7f7aee"
+          @click="createFolder()"
+        />
       </q-card-actions>
     </q-card>
   </q-dialog>

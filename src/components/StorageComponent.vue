@@ -46,7 +46,7 @@ const columns = [
     sortable: true,
     format: (val, row) => {
       if (row.original_name == row.original_name.split('.').pop()) {
-        return 'DIR';
+        return 'FOLDER';
       } else {
         const extension = row.original_name.split('.').pop();
         return extension.toUpperCase();

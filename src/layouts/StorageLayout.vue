@@ -20,7 +20,7 @@ export default {
 
     function getTreeData() {
       api.get('/storage/dir').then((res) => {
-        res.data = res.data.filter((dir) => {
+        res.data = res.data.filter((dir: any) => {
           const pathArray = dir.path.split('/');
           return pathArray.length < 4;
         });

@@ -68,7 +68,18 @@ const columns = [
     label: 'Security',
     field: 'status',
     align: 'right',
-    sortable: true
+    sortable: true,
+    format: (val) => {
+      if (val === 0) {
+        return 'Checking';
+      } else if (val === 1) {
+        return 'Safe';
+      } else if (val === 2) {
+        return 'Dangerous';
+      } else {
+        return '';
+      }
+    }
   }
 ];
 

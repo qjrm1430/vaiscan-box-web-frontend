@@ -2,7 +2,6 @@
 import { api } from 'src/boot/axios';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
-
 export default {
   setup() {
     const hash = ref('');
@@ -11,7 +10,7 @@ export default {
     const risk = ref('');
     const type = ref('');
     const capType = ref('');
-    const flag = ref(true);
+    const flag = ref(false);
     const route = useRoute();
 
     function onLoad() {
@@ -22,6 +21,16 @@ export default {
         risk.value = res.data.risk;
         type.value = res.data.type;
         capType.value = type.value.toUpperCase();
+        if (res.data.size < 1024) {
+          size.value = res.data.size + ' B';
+        } else if (res.data.size < 1024 * 1024) {
+          size.value = (res.data.size / 1024).toFixed(2) + ' KB';
+        } else {
+          size.value = (res.data.size / (1024 * 1024)).toFixed(2) + ' MB';
+        }
+        if (res.data.risk > 0) {
+          flag.value = true;
+        }
       });
     }
     onMounted(() => {
@@ -40,12 +49,12 @@ export default {
 };
 </script>
 <template>
-  <div class="q-ma-xl column item-start justify-center">
-    <div class="row items-center">
+  <div class="q-ma-xl column flex flex-center">
+    <div class="row flex flex-center q-mt-xl">
       <q-space />
-      <div class="type flex flex-center">{{ capType }}</div>
+      <div class="type flex flex-center q-mr-md">{{ capType }}</div>
       <q-space />
-      <div class="box row justify-between items-center">
+      <div class="box row items-center">
         <q-space />
 
         <div class="column">
@@ -56,7 +65,7 @@ export default {
             Our AI machine didn't flag this file as malicious
           </span>
 
-          <div class="row main">Hash <q-space /> {{ hash }}</div>
+          <div class="row main">Hash {{ hash }}</div>
           <div class="row main">Title <q-space /> {{ title }}</div>
         </div>
         <q-space />
@@ -73,7 +82,6 @@ export default {
         <q-space />
       </div>
     </div>
-    <span class="q-ma-md title">Security analysis</span>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -87,7 +95,7 @@ export default {
   color: #f9f9fd;
 }
 .box {
-  width: 904px;
+  width: 804px;
   height: 128px;
   border: solid 1px #2c2c34;
   background-color: #1a1a1a;

@@ -13,11 +13,9 @@ export default {
   },
   setup() {
     const router = useRouter();
-    const route = useRoute();
     const visible = ref(-1);
 
     function onLoad() {
-      const box = route.params.box;
       api
         .get('storage')
         .then((res) => {

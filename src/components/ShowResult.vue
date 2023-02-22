@@ -5,18 +5,23 @@ import { useRoute } from 'vue-router';
 
 export default {
   setup() {
-    const hash = ref('awv34va3vv3ba3bb3ag4a934n3');
-    const title = ref('졸려뒤지겐네');
-    const size = ref('123.02 MB');
-    const trid = ref('JFIF JPEG bitmap (50%)');
-    const type = ref('jpeg');
-    const capType = type.value.toUpperCase();
+    const hash = ref('');
+    const title = ref('');
+    const size = ref('');
+    const risk = ref('');
+    const type = ref('');
+    const capType = ref('');
     const flag = ref(true);
     const route = useRoute();
 
     function onLoad() {
       api.get('result/' + route.query.hash).then((res) => {
-        console.log();
+        hash.value = res.data.hash;
+        title.value = res.data.file_name;
+        size.value = res.data.size;
+        risk.value = res.data.risk;
+        type.value = res.data.type;
+        capType.value = type.value.toUpperCase();
       });
     }
     onMounted(() => {
@@ -26,21 +31,11 @@ export default {
       hash,
       title,
       size,
-      trid,
+      risk,
       capType,
       flag,
       onLoad
     };
-  },
-  created() {
-    this.onLoad();
-  },
-  methods: {
-    onLoad() {
-      api.get('result/' + route.query.hash).then((res) => {
-        console.log(res.data);
-      });
-    }
   }
 };
 </script>
@@ -72,8 +67,8 @@ export default {
         </div>
         <q-separator dark vertical inset class="q-mx-lg" />
         <div class="column">
-          <span class="main q-mb-sm">TRID</span>
-          <div class="main">{{ trid }}</div>
+          <span class="main q-mb-sm">RISK</span>
+          <div class="main">{{ risk }}</div>
         </div>
         <q-space />
       </div>

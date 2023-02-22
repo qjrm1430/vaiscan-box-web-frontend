@@ -9,8 +9,8 @@ export default {
 
     return {
       uploader: ref(false),
-      routing() {
-        router.push({ path: '/result' });
+      routing(hash) {
+        router.push({ path: '/result', query: { hash: hash } });
       }
     };
   },
@@ -26,14 +26,14 @@ export default {
 
         // Create a new FormData object and add the file to it
         const formData = new FormData();
-        formData.append('files', file);
+        formData.append('file', file);
         formData.append('isCover', false);
         // Use Axios to upload the file to the server
         api
           .post('/upload', formData)
           .then((res) => {
             console.log(res);
-            this.routing();
+            this.routing(res.data);
           })
           .catch((error) => {
             console.error('Error uploading file:', error);

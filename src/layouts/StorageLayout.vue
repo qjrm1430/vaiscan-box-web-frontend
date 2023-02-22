@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
 import { api } from 'src/boot/axios';
+import { useRouter } from 'vue-router';
 interface TreeData {
   label: string;
   avatar: string;
@@ -17,6 +18,8 @@ export default {
     const $q = useQuasar();
     const username = $q.cookies.get('name');
     const treeData = ref<TreeData[]>([]);
+    const selected = ref(null);
+    const router = useRouter();
 
     function getTreeData() {
       api.get('/storage/dir').then((res) => {
@@ -56,7 +59,11 @@ export default {
         }
       });
     }
-
+    function clickNode(target) {
+      if (target) {
+        router.push({ path: '/storage', params: { box: target } });
+      }
+    }
     onMounted(() => {
       getTreeData();
     });
@@ -70,6 +77,8 @@ export default {
       treeData,
       getTreeData,
       box: ref(['New Box', 'New Box']),
+      selected,
+      clickNode,
 
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
@@ -174,6 +183,8 @@ export default {
             node-key="label"
             :filter="filter"
             default-expand-all
+            v-model:selected="selected"
+            @update:selected="clickNode"
           />
         </q-scroll-area>
       </div>

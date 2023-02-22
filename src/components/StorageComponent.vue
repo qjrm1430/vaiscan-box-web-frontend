@@ -75,7 +75,13 @@ const columns = [
       } else if (val === 1) {
         return 'Safe';
       } else if (val === 2) {
+        return 'Caution';
+      } else if (val === 3) {
+        return 'Warning';
+      } else if (val === 4) {
         return 'Dangerous';
+      } else if (val === 5) {
+        return 'Error';
       } else {
         return '';
       }

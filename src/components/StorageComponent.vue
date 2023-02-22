@@ -79,9 +79,17 @@ export default {
     const node = ref();
     const folder = ref('');
     const box = ref('');
+
     function getFileList() {
       api.get('storage', { params: { path: btoa(node.value) } }).then((res) => {
-        rows.value = res.data;
+        rows.value = res.data
+          .sort((a, b) => {
+            if (a.original_name > b.original_name) return 1;
+            if (a.original_name < b.original_name) return -1;
+            return 0;
+          })
+          .filter((obj) => obj.file_type === 'dir')
+          .concat(res.data.filter((obj) => obj.file_type !== 'dir'));
       });
     }
     return {

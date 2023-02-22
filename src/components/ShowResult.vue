@@ -65,8 +65,8 @@ export default {
             Our AI machine didn't flag this file as malicious
           </span>
 
-          <div class="row main">Hash {{ hash }}</div>
-          <div class="row main">Title <q-space /> {{ title }}</div>
+          <div class="row main">Hash &nbsp;<q-space />{{ hash }}</div>
+          <div class="row main">Title &nbsp;<q-space />{{ title }}</div>
         </div>
         <q-space />
         <q-separator dark vertical inset class="q-mx-lg" />
@@ -76,8 +76,8 @@ export default {
         </div>
         <q-separator dark vertical inset class="q-mx-lg" />
         <div class="column">
-          <span class="main q-mb-sm">RISK</span>
-          <div class="main">{{ risk }}</div>
+          <span class="main q-mb-sm" style="color: #d54e48">RISK</span>
+          <div class="main">{{ risk }} %</div>
         </div>
         <q-space />
       </div>

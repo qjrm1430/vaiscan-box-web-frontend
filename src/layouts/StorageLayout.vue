@@ -175,7 +175,7 @@ export default {
             />
           </template>
         </q-input>
-        <q-scroll-area dark style="height: 400px">
+        <q-scroll-area dark style="height: 380px">
           <q-tree
             dark
             :nodes="treeData"

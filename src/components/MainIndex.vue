@@ -27,7 +27,6 @@ export default {
         // Create a new FormData object and add the file to it
         const formData = new FormData();
         formData.append('file', file);
-        formData.append('isCover', false);
         // Use Axios to upload the file to the server
         api
           .post('/upload', formData)
@@ -82,6 +81,7 @@ export default {
         Privacy Policy, and to the sharing of your Sample submission with the
         security community. Please do not submit any personal information; Black
         Whopper is not responsible for the contents of your submission.
+        <!-- here is the dark spot -->
       </span>
     </div>
   </div>

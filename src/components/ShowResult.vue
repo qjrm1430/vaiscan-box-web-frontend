@@ -1,5 +1,8 @@
 <script lang="ts">
-import { ref } from 'vue';
+import { api } from 'src/boot/axios';
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
+
 export default {
   setup() {
     const hash = ref('awv34va3vv3ba3bb3ag4a934n3');
@@ -9,14 +12,35 @@ export default {
     const type = ref('jpeg');
     const capType = type.value.toUpperCase();
     const flag = ref(true);
+    const route = useRoute();
+
+    function onLoad() {
+      api.get('result/' + route.query.hash).then((res) => {
+        console.log();
+      });
+    }
+    onMounted(() => {
+      onLoad();
+    });
     return {
       hash,
       title,
       size,
       trid,
       capType,
-      flag
+      flag,
+      onLoad
     };
+  },
+  created() {
+    this.onLoad();
+  },
+  methods: {
+    onLoad() {
+      api.get('result/' + route.query.hash).then((res) => {
+        console.log(res.data);
+      });
+    }
   }
 };
 </script>

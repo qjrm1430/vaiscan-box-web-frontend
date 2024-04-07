@@ -4,8 +4,6 @@ S3 클라우드 스토리지와 통합된, AI기반 멀웨어 탐지 웹 애플�
 
 **작업 기간 :** 2022.12 ~ 2023.02
 
-**소스 코드 :** https://github.com/qjrm1430/vaiscan-box-web-frontend
-
 **소개 영상** : https://youtu.be/Gr3N1OAxoQ8?si=MZ8mNyFkS5qRQ7Xz
 
 **인력 구성 :** Designer/Front-End (1), Back-End(1), AI(1) - Total (3)
